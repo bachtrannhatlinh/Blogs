@@ -1,8 +1,17 @@
 .home {
-  .styleImg {
-    height: 100px;
-    width: 100px;
-  };
+  .form {
+    button {
+      margin-left: 20px;
+    }
+  }
+
+  .cut-text { 
+    width: 100%; 
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 
   .pagination-style {
     display: flex;

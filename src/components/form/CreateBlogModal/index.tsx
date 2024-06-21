@@ -1,61 +1,79 @@
-import React, { useState } from 'react';
-import './styled.css';
+import React, { useState } from "react";
+import "./styled.css";
+import blogsApi from "../../../apis/blogs";
+import { handleAsyncRequest } from "../../../utils/helper";
 
 interface FormData {
-  name: string;
-  email: string;
-  password: string;
+  title: string;
+  content: string;
+  image: File | null;
 }
 
-const CreateBlogModal: React.FC = () => {
-  const [formData, setFormData] = useState<FormData>({ name: '', email: '', password: '' });
+interface CreateBlogModalProps {
+  onClose: () => void
+}
+
+export default function CreateBlogModal({onClose}: CreateBlogModalProps){
+  const [formData, setFormData] = useState<FormData>({
+    title: "",
+    content: "",
+    image: null,
+  });
   const [submitted, setSubmitted] = useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({ ...prevState, [name]: value }));
+    setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitted(true);
-    console.log(formData);
-    // Thực hiện hành động xử lý form ở đây, ví dụ như gửi dữ liệu tới server
+    const formDataToSend = new FormData()
+    formDataToSend.append('blog[title]', formData.title);
+    formDataToSend.append('blog[content]', formData.content);
+    if (formData.image) {
+      formDataToSend.append('blog[image]', formData.image);
+    }
+    const [error, result] = await handleAsyncRequest(blogsApi.createBlog(formDataToSend))
+    if (result) {
+      onClose()
+    }
   };
 
   return (
     <div className="form-container">
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="name">Name</label>
+          <label htmlFor="name">title</label>
           <input
             type="text"
-            id="name"
-            name="name"
-            value={formData.name}
+            id="title"
+            name="title"
+            value={formData.title}
             onChange={handleChange}
             required
           />
         </div>
         <div className="form-group">
-          <label htmlFor="email">Email</label>
+          <label htmlFor="content">Content</label>
           <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
+            type="text"
+            id="content"
+            name="content"
+            value={formData.content}
             onChange={handleChange}
             required
           />
         </div>
         <div className="form-group">
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">Image</label>
           <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
+            type="file"
+            name="image"
             onChange={handleChange}
+            accept="image/*"
             required
           />
         </div>
@@ -64,13 +82,11 @@ const CreateBlogModal: React.FC = () => {
       {submitted && (
         <div className="form-result">
           <h2>Form Submitted</h2>
-          <p>Name: {formData.name}</p>
-          <p>Email: {formData.email}</p>
-          <p>Password: {formData.password}</p>
+          <p>Name: {formData.title}</p>
+          <p>Email: {formData.content}</p>
+          <p>Password: {formData.title}</p>
         </div>
       )}
     </div>
   );
 };
-
-export default CreateBlogModal;
