@@ -22,7 +22,6 @@ export interface CreateBlog {
 }
 
 export interface RespListsBlogs {
-  data: {
     items: ItemListsBlogs[];
     pagination: {
       count: number;
@@ -32,7 +31,6 @@ export interface RespListsBlogs {
       prev: number;
       next: number;
     };
-  };
 };
 
 
@@ -49,7 +47,7 @@ export interface ItemListsBlogs {
 }
 
 export interface RespDetailBlog {
-  id: number;
+  id?: number;
   title: string;
   content: string;
   image: File | null;
@@ -58,16 +56,10 @@ export interface RespDetailBlog {
 }
 
 export interface RespCreatedBlog {
-  message: string;
-  type: string;
-  status: string;
-  path: string;
-  error_code: string;
-  errors: [
-    {
-      field: string;
-      code: string;
-      message: string;
-    }
-  ];
+  id?: number;
+  title: string;
+  content: string;
+  image: File | null;
+  created_at: Date | null;
+  updated_at: Date | null;
 }

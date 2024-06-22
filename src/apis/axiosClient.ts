@@ -14,9 +14,9 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.response.use(
   (response: AxiosResponse) => {
-    // if (response && response.data) {
-    //   return response.data
-    // }
+    if (response && response.data) {
+      return response.data
+    }
 
     return response
   },

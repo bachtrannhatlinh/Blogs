@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./styled.css";
-import blogsApi from "../../../apis/blogs";
-import { handleAsyncRequest } from "../../../utils/helper";
+import useAppDispatch from "../../../hooks/useAppDispatch";
+import { createItem } from "../../../feature/ListsBlog/ListsBlogAction";
 
 interface FormData {
   title: string;
@@ -19,7 +19,7 @@ export default function CreateBlogModal({onClose}: CreateBlogModalProps){
     content: "",
     image: null,
   });
-  const [submitted, setSubmitted] = useState<boolean>(false);
+  const dispatch = useAppDispatch()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -29,17 +29,14 @@ export default function CreateBlogModal({onClose}: CreateBlogModalProps){
 
   const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
     const formDataToSend = new FormData()
     formDataToSend.append('blog[title]', formData.title);
     formDataToSend.append('blog[content]', formData.content);
     if (formData.image) {
       formDataToSend.append('blog[image]', formData.image);
     }
-    const [error, result] = await handleAsyncRequest(blogsApi.createBlog(formDataToSend))
-    if (result) {
-      onClose()
-    }
+    dispatch(createItem(formDataToSend));
+    onClose()
   };
 
   return (
@@ -79,14 +76,6 @@ export default function CreateBlogModal({onClose}: CreateBlogModalProps){
         </div>
         <button type="submit">Submit</button>
       </form>
-      {submitted && (
-        <div className="form-result">
-          <h2>Form Submitted</h2>
-          <p>Name: {formData.title}</p>
-          <p>Email: {formData.content}</p>
-          <p>Password: {formData.title}</p>
-        </div>
-      )}
     </div>
   );
 };

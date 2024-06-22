@@ -1,33 +1,83 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { ItemListsBlogs } from '../../models/blogs'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { ItemListsBlogs, RespDetailBlog } from '../../models/blogs';
+import { createItem, fetchData, updateItem } from './ListsBlogAction';
 
 interface IItemListsBlogs {
-  list: ItemListsBlogs[]
+  list: ItemListsBlogs[];
+  status?: 'idle' | 'loading' | 'succeeded' | 'failed';
+  items?: RespDetailBlog[];
+  error?: string | null;
 }
 
 const initialState: IItemListsBlogs = {
-  list: []
-}
+  list: [],
+  status: 'idle',
+  items: [],
+  error: null,
+};
 
 export const ListsBlogSlice = createSlice({
-  name: 'auth',
+  name: 'ListsBlogSlice',
   initialState,
   reducers: {
-    setListsBlog: (_, action: PayloadAction<IItemListsBlogs>) => {
-      console.log(action.payload, 'action.payload')
-      return action.payload
+    setListsBlog: (state, action: PayloadAction<IItemListsBlogs>) => {
+      state.list = action.payload.list;
+      state.items = action.payload.items;
+      state.status = action.payload.status;
+      state.error = action.payload.error;
     },
     initDepList: (state) => {
-      state.list = []
+      state.list = [];
+    },
+    addItem: (state, action) => {
+      state.items?.push(action.payload);
     },
   },
-  // extraReducers: (builder) => {
-  //   builder
-  //     // search list
-  // }
-})
+  extraReducers: (builder) => {
+    builder
+      //createItem
+      .addCase(createItem.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(createItem.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        if (state.items) {
+          state.items.push(action.payload);
+        }
+      })
+      .addCase(createItem.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+      // fetchData
+      .addCase(fetchData.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchData.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.list = action.payload.items;
+      })
+      .addCase(fetchData.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+      //updateItem
+      .addCase(updateItem.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(updateItem.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        if (state.items) {
+          state.items.push(action.payload);
+        }
+      })
+      .addCase(updateItem.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+  },
+});
 
-export const { setListsBlog } = ListsBlogSlice.actions
+export const { setListsBlog, initDepList, addItem } = ListsBlogSlice.actions;
 
-export default ListsBlogSlice.reducer
-
+export default ListsBlogSlice.reducer;

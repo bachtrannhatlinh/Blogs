@@ -16,7 +16,7 @@ const BlogDetail = () => {
   const handleEditBlog = async () => {
     const [error, respDetailBlog] = await handleAsyncRequest<
       ApiResponse<RespDetailBlog>
-    >(blogsApi.updateBlogById(id));
+    >(blogsApi.getBlogById(id));
 
     if(respDetailBlog) {
       setTimeout(() => {
@@ -34,13 +34,13 @@ const BlogDetail = () => {
       <LoadingSpinner />
     ) : (
     <div className="blog-detail">
-      <h1 className="title">{respDetailBlog?.data.title}</h1>
+      <h1 className="title">{respDetailBlog?.title}</h1>
       <img
-        src={respDetailBlog?.data.image.url}
+        src={respDetailBlog?.image.url}
         alt={"image blog detail"}
         className="blog-image"
       />
-      <div className="content" dangerouslySetInnerHTML={{ __html: respDetailBlog?.data.content }}></div>
+      <div className="content" dangerouslySetInnerHTML={{ __html: respDetailBlog?.content }}></div>
     </div>)
   );
 };

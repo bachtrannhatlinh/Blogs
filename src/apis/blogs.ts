@@ -1,5 +1,5 @@
 import { ApiResponse } from "../models"
-import { CreateBlog, GetDetailBlogsParams, GetListsBlogsParams, RespCreatedBlog, RespDetailBlog, RespListsBlogs } from "../models/blogs"
+import { GetListsBlogsParams, RespCreatedBlog, RespDetailBlog, RespListsBlogs } from "../models/blogs"
 import axiosClient from "./axiosClient"
 
 const blogsApi = {
@@ -19,9 +19,15 @@ const blogsApi = {
     return axiosClient.post(url, params, { headers: { 'Content-Type': 'multipart/form-data' } })
   },
 
-  updateBlogById(id?: string): Promise<ApiResponse<RespDetailBlog>> {
+  getBlogById(id?: string | number): Promise<ApiResponse<RespDetailBlog>> {
     const url = `/api/v2/blogs/${id}`
     return axiosClient.get(url)
   },
+
+  updateBlog(param: { id: string | number, body: FormData }): Promise<ApiResponse<RespDetailBlog>> {
+    const url = `/api/v2/blogs/${param.id}`
+    return axiosClient.put(url, param.body, { headers: { 'Content-Type': 'multipart/form-data' } })
+  },
+
 }
 export default blogsApi
