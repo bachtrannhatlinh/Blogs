@@ -22,6 +22,7 @@ export interface CreateBlog {
 }
 
 export interface RespListsBlogs {
+    total: number;
     items: ItemListsBlogs[];
     pagination: {
       count: number;
