@@ -102,9 +102,9 @@ export default function Home() {
     }
   };
 
-  return !stateListsBlogs ? (
+  return status === 'loading' || !stateListsBlogs.list ? (
     <LoadingSpinner />
-  ) : (
+  ): (
     <div className="home">
       <div className="container-md d-flex justify-content-between">
         <form className="form-inline my-2 col-lg-3 d-flex form" onSubmit={(e) => e.preventDefault()}>
@@ -155,15 +155,6 @@ export default function Home() {
             </div>
           ))}
         </div>
-      </div>
-      <div className="pagination">
-        <button onClick={prevPage} disabled={currentPage === 1}>
-          Previous
-        </button>
-        <span>Page {currentPage} of {totalPages}</span>
-        <button onClick={nextPage} disabled={currentPage === totalPages}>
-          Next
-        </button>
       </div>
       <BlogsModal show={showModal} onClose={toggleModal}>
         <CreateBlogModal onClose={toggleModal} />
