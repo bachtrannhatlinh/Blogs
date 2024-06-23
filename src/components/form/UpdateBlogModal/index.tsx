@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "./styled.css";
 import useAppDispatch from "../../../hooks/useAppDispatch";
 import { updateItem } from "../../../feature/ListsBlog/ListsBlogAction";
 import { handleAsyncRequest } from "../../../utils/helper";
@@ -7,6 +6,8 @@ import { ApiResponse } from "../../../models";
 import { RespDetailBlog } from "../../../models/blogs";
 import blogsApi from "../../../apis/blogs";
 import LoadingSpinner from "../../loading-spinner";
+
+import "./styled.scss";
 
 interface FormData {
   title: string;
@@ -25,19 +26,24 @@ export default function UpdateBlogModal({ onClose, idUpdate }: UpdateBlogModalPr
     content: "",
     image: null,
   });
+  const [loading, setLoading] = useState<boolean>(true);
   const [submitted, setSubmitted] = useState<boolean>(false);
   const dispatch = useAppDispatch();
 
   const handleEditBlog = async () => {
+    setLoading(true);
     const [error, respDetailBlog] = await handleAsyncRequest<ApiResponse<RespDetailBlog>>(
       blogsApi.getBlogById(idUpdate)
     );
 
     if (respDetailBlog) {
-      setTimeout(() => {
-        setFormData(respDetailBlog.data);
-      }, 1000); // Thêm thời gian trễ giả lập 1 giây
+      setFormData({
+        title: respDetailBlog.data.title,
+        content: respDetailBlog.data.content,
+        image: null, // Assuming the current image URL is not needed for the file input
+      });
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -50,16 +56,10 @@ export default function UpdateBlogModal({ onClose, idUpdate }: UpdateBlogModalPr
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-  
-    // Kiểm tra xem file có tồn tại hay không
-    if (file) {
-      setFormData((prevState) => ({ ...prevState, image: file }));
-    } else {
-      setFormData((prevState) => ({ ...prevState, image: null }));
-    }
+    const file = e.target.files?.[0] || null;
+    setFormData((prevState) => ({ ...prevState, image: file }));
   };
-  
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitted(true);
@@ -69,19 +69,23 @@ export default function UpdateBlogModal({ onClose, idUpdate }: UpdateBlogModalPr
     if (formData.image) {
       formDataToSend.append("blog[image]", formData.image);
     }
-    let params = {
+    const params = {
       id: idUpdate,
-      body: formDataToSend
-    }
+      body: formDataToSend,
+    };
     dispatch(updateItem(params));
     onClose();
   };
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className="form-container">
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="name">Title</label>
+          <label htmlFor="title">Title</label>
           <input
             type="text"
             id="title"
@@ -112,9 +116,8 @@ export default function UpdateBlogModal({ onClose, idUpdate }: UpdateBlogModalPr
             accept="image/*"
           />
         </div>
-        <button type="submit">Submit</button>
+        <button type="submit" disabled={submitted}>Submit</button>
       </form>
     </div>
   );
 }
-
