@@ -27,8 +27,6 @@ export default function Home() {
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
   const [idUpdate, setIdUpdate] = useState(0);
   const [searchTerm, setSearchTerm] = useState(""); // State cho giá trị tìm kiếm
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [sortBy, setSortBy] = useState("created_at");
   const [sortDirection, setSortDirection] = useState("desc");
 
@@ -53,22 +51,21 @@ export default function Home() {
 
   const { data: listsBlogs } = useFetch<RespListsBlogs, GetListsBlogsParams>({
     fetcher: blogsApi.getListBlogs,
-    params: { ...defaultListsBlogsParams, page: currentPage, sort_by: sortBy, sort_direction: sortDirection },
+    params: { ...defaultListsBlogsParams, sort_by: sortBy, sort_direction: sortDirection },
   });
 
   useEffect(() => {
     if (listsBlogs?.items) {
       dispatch(setListsBlog({ list: listsBlogs.items }));
-      setTotalPages(Math.ceil(listsBlogs.total / defaultListsBlogsParams.offset));
     }
   }, [dispatch, listsBlogs]);
 
   useEffect(() => {
     if (status === 'succeeded' && !hasFetchedData.current) {
-      dispatch(fetchData({ ...defaultListsBlogsParams, page: currentPage, sort_by: sortBy, sort_direction: sortDirection }));
+      dispatch(fetchData({ ...defaultListsBlogsParams, sort_by: sortBy, sort_direction: sortDirection }));
       hasFetchedData.current = true;
     }
-  }, [status, dispatch, currentPage, sortBy, sortDirection, hasFetchedData]);
+  }, [status, dispatch, sortBy, sortDirection, hasFetchedData]);
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -83,23 +80,6 @@ export default function Home() {
     setSortBy(newSortBy);
     setSortDirection(newSortDirection);
     dispatch(fetchData({ ...defaultListsBlogsParams, sort_by: newSortBy, sort_direction: newSortDirection }));
-  };
-
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-    dispatch(fetchData({ ...defaultListsBlogsParams, page: newPage }));
-  };
-
-  const nextPage = () => {
-    if (currentPage < totalPages) {
-      handlePageChange(currentPage + 1);
-    }
-  };
-
-  const prevPage = () => {
-    if (currentPage > 1) {
-      handlePageChange(currentPage - 1);
-    }
   };
 
   return status === 'loading' || !stateListsBlogs.list ? (
@@ -121,11 +101,14 @@ export default function Home() {
           </button>
         </form>
         <div className="sort-options my-2">
-          <button onClick={() => handleSortChange("created_at")} className='btn-sort-date'>
+          <button onClick={() => handleSortChange("created_at")} className='btn-sort-date btn btn-primary'>
             Sort by Date {sortBy === "created_at" && (sortDirection === "asc" ? "↑" : "↓")}
           </button>
-          <button onClick={() => handleSortChange("title")}>
+          <button onClick={() => handleSortChange("title")} className='btn-sort-date btn btn-primary'>
             Sort by Title {sortBy === "title" && (sortDirection === "asc" ? "↑" : "↓")}
+          </button>
+          <button onClick={toggleModal} className='btn btn-info'>
+            Create Blog
           </button>
         </div>
       </div>
