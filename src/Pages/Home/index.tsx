@@ -84,7 +84,7 @@ export default function Home() {
 
   return status === 'loading' || !stateListsBlogs.list ? (
     <LoadingSpinner />
-  ): (
+  ) : (
     <div className="home">
       <div className="container-md d-flex justify-content-between">
         <form className="form-inline my-2 col-lg-3 d-flex form" onSubmit={(e) => e.preventDefault()}>
@@ -117,23 +117,25 @@ export default function Home() {
         <div className="row gy-3">
           {filteredBlogs.map((item) => (
             <div className="col-sm-6 col-md-6 col-lg-3" key={item.id}>
-              <img src={item.image.url} className="img-fluid" alt={item.title} />
-              <div className="d-grid">
-                <div className="media-body">
-                  <h2>{item.title}</h2>
-                  <p className="cut-text">{item.content}</p>
-                  <p>Comments: {item.comments_count}</p>
+              <div className='block-content'>
+                <img src={item.image.url} className="img-fluid" alt={item.title} />
+                <div className="d-grid">
+                  <div className="media-body">
+                    <h2>{item.title}</h2>
+                    <p className="cut-text">{item.content}</p>
+                    <p>Comments: {item.comments_count}</p>
+                  </div>
                 </div>
-              </div>
-              <div className="d-grid">
-                <button className="btn mt-2 btn-secondary">
-                  <Link to={`/blog/${item.id}`} className="link-detail-page">
-                    Blog detail page
-                  </Link>
-                </button>
-                <button className="btn mt-2 btn-secondary link-detail-page" onClick={() => handleOpenModalUpdate(item.id)}>
-                  Edit Blog
-                </button>
+                <div className="d-grid">
+                  <button className="btn mt-2 btn-secondary">
+                    <Link to={`/blog/${item.id}`} className="link-detail-page">
+                      Blog detail page
+                    </Link>
+                  </button>
+                  <button className="btn mt-2 btn-secondary link-detail-page" onClick={() => handleOpenModalUpdate(item.id)}>
+                    Edit Blog
+                  </button>
+                </div>
               </div>
             </div>
           ))}

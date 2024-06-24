@@ -1,5 +1,6 @@
 .home {
   padding-bottom: 50px;
+
   .form {
     button {
       margin-left: 20px;
@@ -15,19 +16,106 @@
       height: 200px;
       width: 100%;
     }
+
+    .container-md {
+      padding: 20px;
+    }
+
+    .block-btn {
+      margin-top: 20px;
+    }
+
+    .block-content {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      height: 100%;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s;
+
+      &:hover {
+        transform: translateY(-5px);
+      }
+
+      img {
+        border-radius: 8px;
+        max-height: 200px;
+        object-fit: cover;
+      }
+
+      .media-body {
+        padding: 10px 0;
+
+        h2 {
+          font-size: 1.5rem;
+          color: #333;
+          margin-bottom: 10px;
+        }
+
+        p {
+          color: #555;
+
+          &.cut-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3; // Số dòng muốn giới hạn
+            -webkit-box-orient: vertical;
+          }
+        }
+      }
+
+      .d-grid {
+        gap: 10px;
+
+        .btn {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          padding: 10px;
+          text-align: center;
+          cursor: pointer;
+          transition: background-color 0.3s;
+
+          &:hover {
+            background-color: #0056b3;
+          }
+
+          &.btn-secondary {
+            background-color: #6c757d;
+
+            &:hover {
+              background-color: #5a6268;
+            }
+          }
+
+          .link-detail-page {
+            color: white;
+            text-decoration: none;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+    }
+
   }
 
   .link-detail-page {
     text-decoration: none;
     color: black;
     font-size: 20px;
+
     &:hover {
-      color:white;
+      color: white;
     }
   }
 
-  .cut-text { 
-    width: 100%; 
+  .cut-text {
+    width: 100%;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
