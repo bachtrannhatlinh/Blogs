@@ -1,29 +1,75 @@
 .blog-detail {
   max-width: 800px;
   margin: 0 auto;
+  margin-top: 50px;
   padding: 20px;
-}
-
-.title {
-  font-size: 2.5em;
-  margin-bottom: 20px;
-}
-
-.meta {
-  display: flex;
-  justify-content: space-between;
-  color: #888;
-  margin-bottom: 20px;
-}
-
-.blog-image {
-  width: 100%;
-  height: auto;
-  margin-bottom: 20px;
+  background-color: #fff;
   border-radius: 10px;
-}
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
 
-.content {
-  line-height: 1.6;
-  font-size: 1.1em;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .title {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center; // Căn giữa tiêu đề
+  }
+
+  .blog-image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 20px; // Thêm khoảng cách dưới hình ảnh
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .content {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #555;
+    padding: 10px 0;
+
+    p {
+      margin-bottom: 15px; // Thêm khoảng cách dưới mỗi đoạn văn bản
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      margin: 20px 0; // Thêm khoảng cách trên dưới hình ảnh trong nội dung
+    }
+
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin-top: 30px; // Thêm khoảng cách trên các heading trong nội dung
+      color: #333;
+    }
+
+    blockquote {
+      margin: 20px 0;
+      padding: 15px 20px;
+      background-color: #f9f9f9;
+      border-left: 5px solid #007bff;
+      color: #555;
+      font-style: italic;
+    }
+
+    ul,
+    ol {
+      margin: 20px 0;
+      padding-left: 40px;
+
+      li {
+        margin-bottom: 10px;
+      }
+    }
+  }
 }
