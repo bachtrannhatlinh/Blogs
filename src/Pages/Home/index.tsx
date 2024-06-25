@@ -1,20 +1,20 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState, Suspense, lazy } from 'react';
 import blogsApi from "../../apis/blogs";
 import { GetListsBlogsParams, RespListsBlogs } from "../../models/blogs";
 import useFetch from "../../hooks/useFetch";
-import BlogsModal from "../../components/modals/BlogsModal";
-import CreateBlogModal from "../../components/form/CreateBlogModal";
 import { Link } from "react-router-dom";
 import LoadingSpinner from "../../components/loading-spinner";
 import useAppSelector from "../../hooks/useAppSelector";
 import { setListsBlog } from "../../feature/ListsBlog/ListsBlogSlice";
 import useAppDispatch from "../../hooks/useAppDispatch";
 import { fetchData } from "../../feature/ListsBlog/ListsBlogAction";
-import UpdateBlogModal from "../../components/form/UpdateBlogModal";
-
 import "./styled.scss";
-import BlogItem from './component/BlogItem';
-import BtnBlogItem from './component/BtnBlogItem';
+
+const BlogsModal = lazy(() => import("../../components/modals/BlogsModal"));
+const CreateBlogModal = lazy(() => import("../../components/form/CreateBlogModal"));
+const UpdateBlogModal = lazy(() => import("../../components/form/UpdateBlogModal"));
+const BlogItem = lazy(() => import('./component/BlogItem'));
+const BtnBlogItem = lazy(() => import('./component/BtnBlogItem'));
 
 const defaultListsBlogsParams: GetListsBlogsParams = {
   page: 1,
@@ -28,7 +28,7 @@ export default function Home() {
   const [showModal, setShowModal] = useState(false);
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
   const [idUpdate, setIdUpdate] = useState(0);
-  const [searchTerm, setSearchTerm] = useState(""); // State cho giá trị tìm kiếm
+  const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("created_at");
   const [sortDirection, setSortDirection] = useState("desc");
 
@@ -114,22 +114,26 @@ export default function Home() {
 
       <div className="container-md mt-5 block-btn">
         <div className="row gy-3">
-          {filteredBlogs.map((item) => (
-            <div className="col-sm-6 col-md-6 col-lg-3" key={item.id}>
-              <div className='block-content'>
-                <BlogItem item= {item}/>
-                <BtnBlogItem item= {item} onOpenModalUpdate= {handleOpenModalUpdate}/>
+          <Suspense fallback={<LoadingSpinner />}>
+            {filteredBlogs.map((item) => (
+              <div className="col-sm-6 col-md-6 col-lg-3" key={item.id}>
+                <div className='block-content'>
+                  <BlogItem item={item} />
+                  <BtnBlogItem item={item} onOpenModalUpdate={handleOpenModalUpdate} />
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </Suspense>
         </div>
       </div>
-      <BlogsModal show={showModal} onClose={toggleModal}>
-        <CreateBlogModal onClose={toggleModal} />
-      </BlogsModal>
-      <BlogsModal show={openModalUpdate} onClose={handleCloseModalUpdate}>
-        <UpdateBlogModal onClose={handleCloseModalUpdate} idUpdate={idUpdate} />
-      </BlogsModal>
+      <Suspense fallback={<LoadingSpinner />}>
+        <BlogsModal show={showModal} onClose={toggleModal}>
+          <CreateBlogModal onClose={toggleModal} />
+        </BlogsModal>
+        <BlogsModal show={openModalUpdate} onClose={handleCloseModalUpdate}>
+          <UpdateBlogModal onClose={handleCloseModalUpdate} idUpdate={idUpdate} />
+        </BlogsModal>
+      </Suspense>
     </div>
   );
 }
