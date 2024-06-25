@@ -13,6 +13,8 @@ import { fetchData } from "../../feature/ListsBlog/ListsBlogAction";
 import UpdateBlogModal from "../../components/form/UpdateBlogModal";
 
 import "./styled.scss";
+import BlogItem from './component/BlogItem';
+import BtnBlogItem from './component/BtnBlogItem';
 
 const defaultListsBlogsParams: GetListsBlogsParams = {
   page: 1,
@@ -96,9 +98,6 @@ export default function Home() {
             value={searchTerm}
             onChange={handleSearchChange}
           />
-          <button className="btn btn-outline-success my-2 my-sm-0" type="submit">
-            Search
-          </button>
         </form>
         <div className="sort-options my-2">
           <button onClick={() => handleSortChange("created_at")} className='btn-sort-date btn btn-primary'>
@@ -118,24 +117,8 @@ export default function Home() {
           {filteredBlogs.map((item) => (
             <div className="col-sm-6 col-md-6 col-lg-3" key={item.id}>
               <div className='block-content'>
-                <img src={item.image.url} className="img-fluid" alt={item.title} />
-                <div className="d-grid">
-                  <div className="media-body">
-                    <h2>{item.title}</h2>
-                    <p className="cut-text">{item.content}</p>
-                    <p>Comments: {item.comments_count}</p>
-                  </div>
-                </div>
-                <div className="d-grid">
-                  <button className="btn mt-2 btn-secondary">
-                    <Link to={`/blog/${item.id}`} className="link-detail-page">
-                      Blog detail page
-                    </Link>
-                  </button>
-                  <button className="btn mt-2 btn-secondary link-detail-page" onClick={() => handleOpenModalUpdate(item.id)}>
-                    Edit Blog
-                  </button>
-                </div>
+                <BlogItem item= {item}/>
+                <BtnBlogItem item= {item} onOpenModalUpdate= {handleOpenModalUpdate}/>
               </div>
             </div>
           ))}
